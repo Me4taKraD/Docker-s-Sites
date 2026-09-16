@@ -12,7 +12,9 @@ import Stack from '@mui/material/Stack';
 // Импорт базового компонента текстового поля из библиотеки Material UI
 import TextField from '@mui/material/TextField';
 // Импорт функции перехвата жизненного цикла useEffect из библиотеки React
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+// Импорт компонентов
+import ItemCard from './components/item_card';
 
 
 // Конфигурация параметров отправки сетевого запроса методом POST
@@ -273,7 +275,40 @@ function App() {
       // Вывод подтверждения от сервера в консоль
       .then((data) => console.log(data));
   };
-    
+
+  // Вызов хука инициализации состояния для хранения массива элементов из базы данных
+  const [items, setItems] = useState([]);
+  // Вызов хука инициализации состояния для отслеживания выполнения сетевого запроса
+  const [loading, setLoading] = useState(true);
+  
+  // Вызов функции регистрации побочного эффекта при первичной отрисовке компонента
+  useEffect(() => {
+    // Вызов функции отправки сетевого запроса к эндпоинту веб-сервера FastAPI
+    fetch('http://127.0.0.1:8000/items')
+      // Инструкция преобразования тела ответа сервера из формата JSON в объект JavaScript
+      .then((response) => response.json())
+      // Выполнение функции записи полученного массива в состояние и отключения загрузки
+      .then((data) => {
+        // Вызов функции обновления состояния элементов полученными данными
+        setItems(data);
+        // Вызов функции изменения состояния индикатора загрузки на завершенный
+        setLoading(false);
+      })
+      // Обработка возможного сбоя при выполнении сетевого запроса
+      .catch((error) => {
+        // Вывод сообщения об ошибке в консоль окружения
+        console.error('Ошибка при получении данных:', error);
+        // Вызов функции отключения состояния загрузки при ошибке
+        setLoading(false);
+      });
+  }, []);
+
+  // Условие проверки завершения загрузки данных
+  if (loading) {
+    // Возврат разметки текстового уведомления о процессе загрузки
+    return <div style={{ color: '#ffff', padding: '20px' }}>Загрузка...</div>;
+  }
+
   return (
     <ThemeProvider theme={theme}>
       // Параметры Container maxWidth: xs sm md lg xl xxl
@@ -295,8 +330,17 @@ function App() {
         <CustomButton />
         <DiferentButtons />
         <RectangleTextArea onButtonClick={handleClick} />
+        {items.map((item) => (
+          <ItemCard 
+            key={item.id}
+            imageSrc={`http://127.0.0.1:8000${item.image_url}`}
+            title={item.title}
+            description={item.description}
+          />
+        ))}
       </Container>
     </ThemeProvider>
+   
   );
 }
 
