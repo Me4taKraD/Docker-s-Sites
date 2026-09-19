@@ -15,6 +15,8 @@ import TextField from '@mui/material/TextField';
 import React, { useEffect, useState } from 'react';
 // Импорт компонентов
 import ItemCard from './components/item_card';
+// Импортируем функцию из компонента кнопки со счётчиком
+import CountButton from './components/count_button';
 
 
 // Конфигурация параметров отправки сетевого запроса методом POST
@@ -338,6 +340,16 @@ function App() {
             description={item.description}
           />
         ))}
+        <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          marginTop: '20px',
+        }}
+        >
+          <CountButton />
+        </Box>
       </Container>
     </ThemeProvider>
    

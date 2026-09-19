@@ -13,6 +13,7 @@ from sqlalchemy.orm import declarative_base, sessionmaker, Session
 from pathlib import Path
 # Импортируем системный модуль os для работы с файловой структурой
 import os
+import redis
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 IMAGES_DIR = BASE_DIR / "static" / "images"
@@ -22,6 +23,15 @@ IMAGES_DIR = BASE_DIR / "static" / "images"
 DATABASE_URL = "postgresql://postgres_user:postgres_password@db:5432/main_application_db"
 
 app = FastAPI()
+
+# Создание объекта клиента подключения к локальному экземпляру сервера Redis
+r = redis.Redis(
+    # host='localhost', # для локалки пункт хоста
+    host='redis', # для докера
+    port=6379,
+    db=0,
+    decode_responses=True
+    )
 
 # Создаем целевую директорию со всеми родительскими каталогами если она отсутствует
 os.makedirs(IMAGES_DIR, exist_ok=True)
@@ -46,6 +56,8 @@ origins = [
     "http://127.0.0.1:8080",
     "http://localhost:5173",
     "http://127.0.0.1:5173",
+    "http://localhost:6379",
+    "http://127.0.0.1:6379",
 ]
 
 # CORS — разрешаем запросы с фронтенда (http://localhost:5173)
@@ -141,6 +153,28 @@ def read_items(db: Session = Depends(get_db)):
     # Возврат списка найденных объектов клиенту
     return items_list
 
+# ============================================================
+# БЛОК ПОД РЕДИС
+
+# Декоратор регистрации обработчика GET-запроса по адресу /clicks
+@app.get("/clicks")
+# Объявление функции считывания сохраняемого значения счетчика
+def get_clicks():
+    # Чтение значения по ключу button_clicks из оперативной памяти или выбор нуля
+    count = r.get("button_clicks") or 0
+    # Возврат полученного числа в виде словаря для отправки в формате JSON
+    return {"clicks": int(count)}
+
+# Декоратор регистрации обработчика POST-запроса по адресу /clicks/increment
+@app.post("/clicks/increment")
+# Объявление функции вызова команды увеличения значения счетчика
+def increment_clicks():
+    # Выполнение команды атомарного увеличения значения по ключу в базе Redis
+    new_count = r.incr("button_clicks")
+    # Возврат обновленного значения клиенту
+    return {"clicks": new_count}
+
+# ============================================================
 
 if __name__ == "__main__":
     import uvicorn
