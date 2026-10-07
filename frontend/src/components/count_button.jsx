@@ -9,7 +9,7 @@ function CountButton() {
   const [count, setCount] = useState(0);
   
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/clicks')
+    fetch('/api/clicks')
       .then((response) => response.json())
       .then((data) => setCount(data.clicks))
       .catch((error) => console.error('Ошибка получения счётчика:', error));
@@ -19,7 +19,7 @@ function CountButton() {
   const handleClick = () => {
     // Вызов функции изменения состояния с увеличением текущего значения на единицу
     // setCount((prevCount) => prevCount + 1);
-    fetch('http://127.0.0.1:8000/clicks/increment', {method: 'POST'})
+    fetch('/api/clicks/increment', {method: 'POST'})
       .then((response) => response.json())
       .then((data) => setCount(data.clicks))
       .catch((error) => console.error('Ошибка изменения счётчика:', error));

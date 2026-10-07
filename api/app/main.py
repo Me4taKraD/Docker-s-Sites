@@ -38,9 +38,12 @@ os.makedirs(IMAGES_DIR, exist_ok=True)
 
 # Инициализируем статик и указываем директорию с назавнием в url
 app.mount(
-    "/images",
-    StaticFiles(directory=IMAGES_DIR),
-    name="images",
+    # "/images",
+    # StaticFiles(directory=IMAGES_DIR),
+    # name="images",
+    "/static",
+    StaticFiles(directory="static"),
+    name="static",
 )
 
 # Объявление класса схемы данных для входящего тела запроса
@@ -52,12 +55,27 @@ class ButtonClickSchema(BaseModel):
 
 # Расширяем запросы фронтенда с других адресов, чтобы не выпадала ошибка 400 
 origins = [
+    # "http://localhost:8080",
+    # "http://127.0.0.1:8080",
+    # "http://localhost:5173",
+    # "http://127.0.0.1:5173",
+    # "http://localhost:6379",
+    # "http://127.0.0.1:6379",
+    
+    # НОВЫЕ ПОД NGINX
+
+    # Разрешаем защищенные соединения с локального узла по протоколу HTTPS
+    "https://localhost",
+    # Разрешаем переадресованные соединения с локального узла по протоколу HTTP
+    "http://localhost",
+    # Разрешаем защищенные соединения по IP-адресу локальной петли
+    "https://127.0.0.1",
+    # Разрешаем стандартные соединения по IP-адресу локальной петли
+    "http://127.0.0.1",
+    # Сохраняем доступ для прямого обращения к старому порту клиентского приложения
     "http://localhost:8080",
-    "http://127.0.0.1:8080",
+    # Сохраняем доступ для прямого обращения к порту сервера разработки
     "http://localhost:5173",
-    "http://127.0.0.1:5173",
-    "http://localhost:6379",
-    "http://127.0.0.1:6379",
 ]
 
 # CORS — разрешаем запросы с фронтенда (http://localhost:5173)
@@ -178,4 +196,4 @@ def increment_clicks():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    uvicorn.run(app, host="0.0.0.0", port=8000)

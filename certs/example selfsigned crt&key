@@ -1,0 +1,5 @@
+# Сгенерируй в эту папку самоподписанный SSL-сертификат и приватный ключ через OpenSSL при помощи команды ниже.
+# В этом тебе поможет среда, которая видит уже установленный OpenSSL у тебя на компьютере (у меня это Git Bash)
+
+# КОМАНДА
+# openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout certs/selfsigned.key -out certs/selfsigned.crt -subj "/CN=localhost"

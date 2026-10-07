@@ -1,2 +1,6 @@
 /.venv/
 /frontend/src/assets
+
+# Игнорирование самоподписанных сертификата и ключа
+/certs/selfsigned.crt
+/certs/selfsigned.key

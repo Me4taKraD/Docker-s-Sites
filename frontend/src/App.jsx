@@ -263,7 +263,7 @@ function RectangleTextArea({ onButtonClick }) {
 
 function App() {
   useEffect(() => {
-    fetch('http://127.0.0.1:8000/check')
+    fetch('/api/check')
       .then((response) => response.json())
       .then((data) => console.log(data));
   }, []);
@@ -271,7 +271,7 @@ function App() {
   // Объявление функции-обработчика события клика по кнопке
   const handleClick = () => {
     // Вызов инструкции fetch с передачей адреса и конфигурационного объекта
-    fetch('http://127.0.0.1:8000/click', requestOptions)
+    fetch('/api/click', requestOptions)
       // Преобразование ответа сервера в формат JSON
       .then((response) => response.json())
       // Вывод подтверждения от сервера в консоль
@@ -286,7 +286,7 @@ function App() {
   // Вызов функции регистрации побочного эффекта при первичной отрисовке компонента
   useEffect(() => {
     // Вызов функции отправки сетевого запроса к эндпоинту веб-сервера FastAPI
-    fetch('http://127.0.0.1:8000/items')
+    fetch('/api/items')
       // Инструкция преобразования тела ответа сервера из формата JSON в объект JavaScript
       .then((response) => response.json())
       // Выполнение функции записи полученного массива в состояние и отключения загрузки
@@ -335,7 +335,8 @@ function App() {
         {items.map((item) => (
           <ItemCard 
             key={item.id}
-            imageSrc={`http://127.0.0.1:8000${item.image_url}`}
+            // imageSrc={`http://127.0.0.1:8000${item.image_url}`}
+            imageSrc={item.image_url}
             title={item.title}
             description={item.description}
           />
