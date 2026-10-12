@@ -15,8 +15,12 @@ from pathlib import Path
 import os
 import redis
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-IMAGES_DIR = BASE_DIR / "static" / "images"
+BASE_DIR = Path(__file__).resolve().parent
+# Задаем путь к папке статических файлов /app/static
+STATIC_DIR = BASE_DIR / "static"
+# Задаем путь к папке для изображений /app/static/images
+IMAGES_DIR = STATIC_DIR / "images"
+
 # Подключение к БД по обычной локалке
 # DATABASE_URL = "postgresql://postgres:1234567890Ab@localhost:5432/Docker_Simple_Site"
 # Подключение к БД внутри контейнера Докера
@@ -33,16 +37,13 @@ r = redis.Redis(
     decode_responses=True
     )
 
-# Создаем целевую директорию со всеми родительскими каталогами если она отсутствует
+# АВТОМАТИЧЕСКИ СОЗДАЕМ ПАПКУ /app/static/images ЕСЛИ ОНА ОТСУТСТВУЕТ (exist_ok=True предотвращает ошибки)
 os.makedirs(IMAGES_DIR, exist_ok=True)
 
-# Инициализируем статик и указываем директорию с назавнием в url
+# Регистрируем роут /static для отдачи статических файлов из автоматически созданной папки STATIC_DIR
 app.mount(
-    # "/images",
-    # StaticFiles(directory=IMAGES_DIR),
-    # name="images",
     "/static",
-    StaticFiles(directory="static"),
+    StaticFiles(directory=STATIC_DIR),
     name="static",
 )
 

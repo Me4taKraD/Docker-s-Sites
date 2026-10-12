@@ -1,0 +1,173 @@
+# Указываем версию API Kubernetes для создания базовых объектов конфигурации
+apiVersion: v1
+# Определяем тип создаваемого объекта как Secret для хранения секретных данных
+kind: Secret
+# Секция метаданных для идентификации объекта в пространстве имён
+metadata:
+  # Задание уникального имени объекта секретов базы данных
+  name: postgres-credentials
+# Тип секрета, определяющий способ обработки данных (Opaque - произвольные данные)
+type: Opaque
+# Словарь зашифрованных в Base64 ключевых параметров базы данных
+data:
+  # Имя пользователя СУБД (значение "postgres_user" в Base64)
+  POSTGRES_USER: cG9zdGdyZXNfdXNlcg==
+  # Пароль администратора базы данных (значение "postgres_password" в Base64)
+  POSTGRES_PASSWORD: cG9zdGdyZXNfcGFzc3dvcmQ=
+  # Имя создаваемой по умолчанию базы данных (значение "main_application_db" в Base64)
+  POSTGRES_DB: bWFpbl9hcHBsaWNhdGlvbl9kYg==
+
+# Разделитель нескольких документов в рамках одного YAML-файла
+---
+
+# Указываем версию API Kubernetes для создания базовых объектов конфигурации
+apiVersion: v1
+# Определяем тип создаваемого объекта как Secret для хранения SSL/TLS сертификатов
+kind: Secret
+# Секция метаданных для идентификации TLS секрета
+metadata:
+  # Уникальное имя секрета для монтирования в прокси-сервер Nginx
+  name: nginx-tls-certs
+# Специализированный тип секрета Kubernetes для хранения закрытых ключей и сертификатов
+type: kubernetes.io/tls
+# Словарь с закодированными файлами сертификата и ключа
+data:
+  # Весь файл selfsigned.crt, закодированный в Base64
+  tls.crt: LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tDQpNSUlEQ1RDQ0FmR2dBd0lCQWdJVUZFTFJ0MVdEbEF5dlN6eWViejNCV0YxWHNJZ3dEUVlKS29aSWh2Y05BUUVMDQpCUUF3RkRFU01CQUdBMVVFQXd3SmJHOWpZV3hvYjNOME1CNFhEVEkyTVRBd016QTRNelUxTUZvWERUSTNNVEF3DQpNekE0TXpVMU1Gb3dGREVTTUJBR0ExVUVBd3dKYkc5allXeG9iM04wTUlJQklqQU5CZ2txaGtpRzl3MEJBUUVGDQpBQU9DQVE4QU1JSUJDZ0tDQVFFQXpZRFFTNndtNFJudHk4N1JvbW45aGkvZUtYVWdRaXhuU2FvR1NWVmdybjljDQptRmVocDBMVlVmUDNyUFRFTEkxQVVwbTdQWGZFQUtUVHZGQjlFbU5FbzRkNHk1UCs3TzFxTkc2TVR1RkRGdk53DQo4K2NMbnMwTytoVzlrY0VwSG45UzMvQ1FyWGdyVk5IYy81RFRPRGwzekZtVG5ZZVg1aVVZU0dya0I3eTZsY2ZCDQovZ2s1TzR1N2pBZnZ2a1hLd3pSQVp5UzdsRnZ2ck5YcHQrWC9YRmZqdElmNUdxTUNhOEdxUFF4OVVBMzFrOElNDQpvOTcxcFNZdVZTWGp0SXRYNktxei91WDdoVnpuVjhjR0p4eUxXQ3p6Vm5CblJIMnFTbmFEbHdxOWpqYzhad0RFDQplWTNQY0wvQXFnNGFDZkFvaU5TTURmZk9GUXVVOGF6SlI2MGdGekxFYVFJREFRQUJvMU13VVRBZEJnTlZIUTRFDQpGZ1FVZTMydFdHdUpPMmV6cGM2K0NmZjR3THlWMnZRd0h3WURWUjBqQkJnd0ZvQVVlMzJ0V0d1Sk8yZXpwYzYrDQpDZmY0d0x5VjJ2UXdEd1lEVlIwVEFRSC9CQVV3QXdFQi96QU5CZ2txaGtpRzl3MEJBUXNGQUFPQ0FRRUF0MUFVDQpHY09jcnI3RVI4bjVSNHdVOU12dG1KOGYzYURGRTMrblB6d2xCSlBDeFVncDhhdzlIUHNDUCtQeVlGTW1IbVJJDQovOGFud0g0OVJhU3JmZWtML1lCODdmc01EdXo2UjQraXBkK0NwK2F2bXhWTlQ2TzJNL0xReXphQlNpeW1MWXEvDQpqQW1sL2Q2RTgxb2luSG5qT2ZBc1FpaHhFQnVhS2FwWEgyb2NkOWMvWEQvZllzc3UvcFhpVFJuaEdaZTVDenlrDQprSDNSUEIzenlFOFUraWVIdFpvWmtsQUMvZGhEWDB2Qk5LOFNibVJPTnhFYkZZd2lra1NmYitqeEZmRkMrUm44DQpsWU16aWxLZ3Mzd3l1M1VvZzhvWTdtMWJNOXRuNEVHM25aN2RNSS8rcXUyYStrWENabkFXQTZrVVIxTXNPNm1NDQptNktWK0VxblBUbWhmWDRmOUE9PQ0KLS0tLS1FTkQgQ0VSVElGSUNBVEUtLS0tLQ0K
+  # Весь файл selfsigned.key, закодированный в Base64
+  tls.key: LS0tLS1CRUdJTiBQUklWQVRFIEtFWS0tLS0tDQpNSUlFdmdJQkFEQU5CZ2txaGtpRzl3MEJBUUVGQUFTQ0JLZ3dnZ1NrQWdFQUFvSUJBUUROZ05CTHJDYmhHZTNMDQp6dEdpYWYyR0w5NHBkU0JDTEdkSnFnWkpWV0N1ZjF5WVY2R25RdFZSOC9lczlNUXNqVUJTbWJzOWQ4UUFwTk84DQpVSDBTWTBTamgzakxrLzdzN1dvMGJveE80VU1XODNEejV3dWV6UTc2RmIyUndTa2VmMUxmOEpDdGVDdFUwZHovDQprTk00T1hmTVdaT2RoNWZtSlJoSWF1UUh2THFWeDhIK0NUazdpN3VNQisrK1JjckRORUJuSkx1VVcrK3MxZW0zDQo1ZjljVitPMGgva2Fvd0pyd2FvOURIMVFEZldUd2d5ajN2V2xKaTVWSmVPMGkxZm9xclArNWZ1RlhPZFh4d1luDQpISXRZTFBOV2NHZEVmYXBLZG9PWENyMk9OenhuQU1SNWpjOXd2OENxRGhvSjhDaUkxSXdOOTg0VkM1VHhyTWxIDQpyU0FYTXNScEFnTUJBQUVDZ2dFQURJa1hoVUZoeFZ1ZFA0T0UzNGtXTmd6MGREcS9UK2JhZ09POHQyNnBJR3ZVDQpRdFpSbmZadk5QbmZVdThQdlpoaFl2dTBTZkN4bnk4N2p0VjJlZytSSEpqMmJ1Q2xVOFpWc3crdFFtQ0g2ejM3DQp2V055SHJlZWVzS21paXJkaUNiUXZOdTFUNVJqNHF3cFd3MHBvNlYya3dJT256VGRIeGZzeDhia29XNHhxWVZtDQpXejQxVnhwdTlWQk9IME1GOTVPQUhMRjdWTGhqMFV4Y0ZGUjYyZ1h6QTBleHFqRldIdGYvNVJDSDMzNjNFUU0xDQpzcVJlVmFHNlpqdkxUSk9ORFVnYWp3YzI0S2xyNW45UDdEWnh4MXRkSFlOK3VETlptVm44M0dRNis4R2dZalhnDQplcWg5NFdHMXMvRUdmSWpkNXVvSjI0WUx4ZjVVc21kTk8rbFptT2N5NndLQmdRRDA4aWpMSDVHUnBCTXZESDlWDQpGVDJVclVkY3JqVUE0WWg0M0hDdWRHTXgwcWJXTjZJQzRjd3RFQU1uY0JBVjJ4TVdtYlFkRHF6RnBiWFBqUWZCDQpTYWdLaTdPaFNGeTNSUHUwakw0eElCUlBmNEpRSTFkOHFYREV3bXpJcWVSWEovdDZCWUQ3SW1SMjNKVExEekpRDQpDQUtUMFM4YlVHTUZQbGJRdmVEcUFUR3Yrd0tCZ1FEV3h2bXVUOVg5NC90U0Vxdy9ZRmk3TEEvZVc1Z2llUDIwDQpJT3Z1d0ErVFFHeEhiVStBQmczN0I1L2drSFBMTldwM2RoSlNTaTFCSE8ycVorUzN0UFZxb0xqaGRCeGl1QXY4DQovdmRTK2ZwU0FpUTBxNEpRZnpmZlpxZE92aWhBTlViYjJtT2tQZU1QWmRRVjE0c2xPaGhuMUpibHBqcFYycGNxDQpFZVZzQ0poYjZ3S0JnQ2VUbk8yODZ3dEtKR05jdEpJdHZXWnhYTzlub2w3REVnYmRMME93d0hwRFcvdU92NW1SDQpuQ2pIeG9xdnU1bWNiUWdneTQ1S1diWVJvVCtvdk5FSk1xS0prZnVFTXA3V0FZbFptRDFkdm9wZHd0TnA4bS9NDQovTkI5elkvYWkyOWRvVzlFeG1OTldrZ3VPY2haYXpxdElLVjdqZzN1dmlFUnduczF3c3BzYVBmVEFvR0JBSi9aDQovZkQvbUl4Ymh5emhtdk9jZU0zdUVHMTFqSGh6eHBldlBRbzRSaDlaZm4xMjNRbXk5K3JURk9vbGVSbFFTMHBZDQpSWENicHF6a28vc0ZVbFJzU1pBdnlRcDd5YmlydExoNjU0Y0phSVpxODVtRDRQeWFndkl4eStvdVczVFdja09sDQplaTIrcGVWSzY1dktEZFVLTlNucUx0a0RiRDJEOEtndUk2dlJoZHc3QW9HQkFLME9UTEUyd0FpWWtMWGRxQ041DQo0S0JoaC9rVDl4Q2IzVGNlNXlnNEI5ZjlKME1iaU1YMStzbVgrcGMxc3JCTjRYOElqQ3F6a1NsVFFuUWJ1NXlpDQptL2E4a3hGWHBKOXNWZENwL2ViVS84R2lodndPQXlqaEV5bStHbTFJWE9LbFIrM2hZTldBNXh3dG1xMnNtdmZvDQpmUkNGRGo2bFRkV3poTGZxbTdGa3dGNmYNCi0tLS0tRU5EIFBSSVZBVEUgS0VZLS0tLS0NCg==
+
+# Разделитель нескольких документов в рамках одного YAML-файла
+---
+
+# Указываем версию API Kubernetes для создания базовых объектов конфигурации
+apiVersion: v1
+# Определяем тип создаваемого объекта как ConfigMap для хранения неконфиденциальных данных
+kind: ConfigMap
+# Секция метаданных для идентификации конфигурационной карты
+metadata:
+  # Задание уникального имени объекта карты для инициализации базы данных
+  name: postgres-init-script
+# Словарь, в котором будут храниться файлы конфигурации и скрипты
+data:
+  # Название создаваемого виртуального файла внутри тома
+  init.sql: |
+    -- Создаем структуру таблицы товаров, если СУБД запускается впервые
+    CREATE TABLE IF NOT EXISTS items (
+    -- Первичный ключ с автоинкрементом
+    id SERIAL PRIMARY KEY,
+    -- Поле названия игры
+    title TEXT NOT NULL,
+    -- Поле подробного описания
+    description TEXT,
+    -- Относительный путь к файлу обложки
+    image_url VARCHAR(255),
+    -- JSONB поле для расширенных параметров товара
+    characteristics JSONB DEFAULT '{}'
+    );
+
+    -- Добавляем начальный игровой товар в каталог
+    INSERT INTO items (title, description, image_url)
+    VALUES (
+      -- Название игры
+      'SPRAWL zero',
+      -- Описание игры
+      'Динамичный шутер, вдохновленный культовыми играми этого жанра 2000-х годов. Попробуйте выжить в жестоком киберпанковском городе, угнетаемом военным режимом и религиозными фанатиками.',
+      -- Корректный путь к изображению с префиксом /static для раздачи шлюзом
+      '/static/images/capsule_231x87_2x.jpg'
+    ) ON CONFLICT DO NOTHING;
+
+# Разделитель нескольких документов в рамках одного YAML-файла
+---
+
+# Указываем версию API Kubernetes для создания базовых объектов конфигурации
+apiVersion: v1
+# Определяем тип создаваемого объекта как ConfigMap для хранения конфигурации Nginx
+kind: ConfigMap
+# Секция метаданных для идентификации конфигурационной карты шлюза
+metadata:
+  # Задание уникального имени объекта карты для конфигурации Nginx
+  name: nginx-configuration
+# Хранилище текстовых файлов конфигурации
+data:
+  # Название виртуального файла конфигурации, который будет смонтирован в контейнер
+  nginx.conf: |
+    # Задаем область обработки событий сетевых соединений в Nginx
+    events {
+      # Устанавливаем предельное количество одновременно обслуживаемых соединений одним рабочим процессом
+      worker_connections 1024;
+    }
+
+    # Открываем главный блок настройки HTTP протокола
+    http {
+      # Включаем автоматическое определение MIME-типов передаваемых файлов
+      include /etc/nginx/mime.types;
+      # Задаем базовый тип содержимого по умолчанию для неизвестных файлов
+      default_type application/octet-stream;
+      
+      # Настраиваем виртуальный сервер для перенаправления HTTP на HTTPS
+      server {
+        # Слушаем входящие запросы на стандартном порту 80
+        listen 80;
+        # Задаем доменное имя локального узла
+        server_name localhost;
+
+        # Устанавливаем правила обработки для всех входящих путей
+        location / {
+          # Перенаправляем на защищенный протокол HTTPS с кодом 301
+          return 301 https://$host$request_uri;
+        }
+      }
+
+      # Настраиваем виртуальный сервер для обработки защищенного TLS-трафика
+      server {
+        # Активируем прослушивание порта 443 с поддержкой SSL/TLS шифрования
+        listen 443 ssl;
+        # Задаем доменное имя локального узла для защищенного соединения
+        server_name localhost;
+
+        # Путь к файлу публичного сертификата внутри контейнера Nginx (из смонтированного секрета)
+        ssl_certificate /etc/nginx/certs/tls.crt;
+        # Путь к файлу закрытого ключа внутри контейнера Nginx (из смонтированного секрета)
+        ssl_certificate_key /etc/nginx/certs/tls.key;
+
+        # Разрешенные безопасные версии криптографических протоколов соединения
+        ssl_protocols TLSv1.2 TLSv1.3;
+
+        # Настраиваем перенаправление запросов API на бэкенд FastAPI
+        location /api/ {
+          # Проксируем входящие запросы на внутренний Kubernetes Service "backend" на порту 8000
+          proxy_pass http://backend:8000/;
+          # Запись оригинального сетевого имени узла в заголовок проксирования
+          proxy_set_header Host $host;
+          # Передача реального сетевого адреса клиента в заголовок проксирования
+          proxy_set_header X-Real-IP $remote_addr;
+          # Формируем список промежуточных IP-адресов в заголовке X-Forwarded-For
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          # Передаем исходную схему соединения во внутреннем заголовке X-Forwarded-Proto
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+
+        # Перенаправляем запросы статики на бэкенд FastAPI, где внутри образа хранятся картинки
+        location /static/ {
+          # Проксируем трафик статики на внутренний Service backend
+          proxy_pass http://backend:8000/static/;
+          # Передаем оригинальный заголовок Host
+          proxy_set_header Host $host;
+        }
+
+        # Настраиваем перенаправление всех остальных запросов на клиентское приложение React
+        location / {
+          # Проксируем трафик на внутренний Kubernetes Service "frontend" на порту 80
+          proxy_pass http://frontend:80;
+          # Сохраняем и передаем оригинальный заголовок Host от клиента
+          proxy_set_header Host $host;
+          # Передаем реальный IP-адрес клиента во внутреннем заголовке X-Real-IP
+          proxy_set_header X-Real-IP $remote_addr;
+          # Формируем список промежуточных IP-адресов в заголовке X-Forwarded-For
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          # Передаем исходную схему соединения во внутреннем заголовке X-Forwarded-Proto
+          proxy_set_header X-Forwarded-Proto $scheme;
+        }
+      }   
+    }

@@ -1,6 +1,11 @@
 /.venv/
 /frontend/src/assets
+api/app/encode_secrets.py
 
 # Игнорирование самоподписанных сертификата и ключа
 /certs/selfsigned.crt
 /certs/selfsigned.key
+/certs/base64 data.template
+
+# Секреты Кубернетиса
+# k8s/secret.yaml

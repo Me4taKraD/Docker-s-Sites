@@ -1,0 +1,104 @@
+# Использует версию API Kubernetes для объектов Deployment.
+apiVersion: apps/v1
+# Создаёт Deployment для управления экземплярами шлюза.
+kind: Deployment
+# Содержит метаданные Deployment.
+metadata:
+  # Задаёт имя Deployment в пространстве имён.
+  name: nginx-gateway
+# Описывает желаемое состояние Deployment.
+spec:
+  # Поддерживает один экземпляр шлюза.
+  replicas: 1
+  # Определяет, какие Pod'ы принадлежат Deployment.
+  selector:
+    # Находит Pod'ы, которыми управляет этот Deployment.
+    matchLabels:
+      # Метка должна совпадать с меткой в шаблоне Pod.
+      app: nginx-gateway
+  # Задаёт шаблон, по которому Deployment создаёт Pod'ы.
+  template:
+    # Содержит метаданные создаваемых Pod'ов.
+    metadata:
+      # Назначает метки создаваемым Pod'ам.
+      labels:
+        # Помечает создаваемые Pod'ы для selector и Service.
+        app: nginx-gateway
+    # Описывает содержимое и настройки Pod.
+    spec:
+      # Перечисляет контейнеры, запускаемые в Pod.
+      containers:
+        # Задаёт имя контейнера в Pod.
+        - name: gateway
+          # Запускает NGINX на базе облегчённого образа Alpine.
+          image: nginx:alpine
+          # Объявляет сетевые порты контейнера.
+          ports:
+            # Объявляет HTTP-порт, который слушает контейнер.
+            - containerPort: 80
+              # Даёт HTTP-порту понятное имя.
+              name: http-port
+            # Объявляет HTTPS-порт, который слушает контейнер.
+            - containerPort: 443
+              # Даёт HTTPS-порту понятное имя.
+              name: https-port
+          # Указывает, куда подключить тома внутри контейнера.
+          volumeMounts:
+            # Подключает том с конфигурацией NGINX.
+            - name: config-volume
+              # Размещает файл конфигурации по пути, ожидаемому NGINX.
+              mountPath: /etc/nginx/nginx.conf
+              # Монтирует из тома только файл nginx.conf.
+              subPath: nginx.conf
+            # Подключает том с TLS-сертификатами.
+            - name: certs-volume
+              # Размещает сертификаты в каталоге NGINX.
+              mountPath: /etc/nginx/certs
+      # Объявляет источники томов, доступных контейнерам Pod.
+      volumes:
+        # Объявляет том для конфигурации NGINX.
+        - name: config-volume
+          # Использует ConfigMap как источник данных тома.
+          configMap:
+            # Берёт содержимое тома из ConfigMap с этим именем.
+            name: nginx-configuration
+        # Объявляет том для TLS-сертификатов.
+        - name: certs-volume
+          # Использует Secret как источник данных тома.
+          secret:
+            # Берёт сертификаты из Secret с этим именем.
+            secretName: nginx-tls-certs
+
+# Разделяет два ресурса Kubernetes, описанные в одном YAML-файле.
+---
+
+# Использует базовую версию API Kubernetes для Service.
+apiVersion: v1
+# Создаёт Service для доступа к Pod'ам шлюза.
+kind: Service
+# Содержит метаданные Service.
+metadata:
+  # Задаёт имя Service в пространстве имён.
+  name: nginx-gateway-service
+# Описывает, как Service принимает и перенаправляет трафик.
+spec:
+  # Перечисляет порты, доступные через Service.
+  ports:
+    # Даёт публикуемому HTTP-порту имя.
+    - name: http
+      # Принимает HTTP-трафик на порту 80 Service.
+      port: 80
+      # Перенаправляет HTTP-трафик на порт 80 контейнера.
+      targetPort: 80
+    # Даёт публикуемому HTTPS-порту имя.
+    - name: https
+      # Принимает HTTPS-трафик на порту 443 Service.
+      port: 443
+      # Перенаправляет HTTPS-трафик на порт 443 контейнера.
+      targetPort: 443
+  # Выбирает Pod'ы, на которые Service направляет трафик.
+  selector:
+    # Направляет трафик к Pod'ам с этой меткой.
+    app: nginx-gateway
+  # Запрашивает внешний балансировщик нагрузки для Service.
+  type: LoadBalancer
